@@ -81,13 +81,96 @@ newGameButton.addEventListener('click',function(){
 function getCardString(card){
     return card.value + ' of ' + card.suit;
 }
+
+function getCardNumericValue(card){
+    switch(card.value){
+        case 'Ace':
+            return 1;
+        case 'Two':
+            return 2;
+        case 'Three':
+            return 3;
+        case 'Four':
+            return 4;
+        case 'Five':
+            return 5;
+        case 'Six':
+            return 6;
+        case 'Seven':
+            return 7;
+        case 'Eight':
+            return 8;
+        case 'Nine':
+            return 9;
+        defalt:
+            return 10;
+    }
+
+}
+
+function getScore(cardArray){
+    let score = 0;
+    let hasAce = false;
+
+    for(let i=0; i<cardArray.length; i++){
+        let card = cardArray[i];
+        score += getCardNumericValue(card);
+        if(card.value === 'Ace')
+            hasAce = true;
+    }
+
+    if(hasAce && score + 10 <= 21){
+        return score + 10;
+    }
+
+    return score;
+}
+
+function updateScores(){
+    dealerScore = getScore(dealerCards);
+    playerScore = getScore(playerCards);
+}
+
 function showStatus(){
     if(!gameStarted){
         textArea.innerText = 'Welcome to Blackjack!';
         return;
     }
+
+    let dealerCardString = '';
+    for(let i=0; i<dealerCards.length;i++){
+        dealerCardString += '\n' + getCardString(dealerCards[i]);
+    }
+ 
+    let playerCardString = '';
+    for(let i = 0; i<playerCards.length; i++){
+        playerCardString += '\n' + getCardString(playerCards[i]);
+    }
+
     for(let i = 0; i < deck.length; i++){
         textArea.innerText += "\n" + getCardString(deck[i]);
+    }
+
+    updateScores();
+
+    textArea.innerText = 
+    'Dealer has:\n' +
+    dealerCardString + '\n' +
+    '(score: ' + dealerScore + ')\n\n' +
+
+    'Player has:\n' +
+    playerCardString + '\n' +
+    '(score: ' + playerScore + ')\n\n';
+
+    if(gameOver){
+        if(playerWon){
+            textArea.innerText += "YOU WIN!"
+        }else{
+            textArea.innerText += "DEALER WIN!"
+        }
+        newGameButton.style.display = "block";
+        hitButton.style.display = "none";
+        stayButton.style.display = "none";
     }
 }
 
