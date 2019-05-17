@@ -51,12 +51,9 @@ function shuffleDeck(deck){
     }
 }
 
-
-
 function getNextCard(){
     return deck.shift();
 }
-
 
 newGameButton.addEventListener('click',function(){
     gameStarted = true;
@@ -65,7 +62,7 @@ newGameButton.addEventListener('click',function(){
 
     deck = createDeck();
     shuffleDeck(deck);
-    console.log(deck);
+    //console.log(deck);
     dealerCards = [getNextCard(),getNextCard()];
     playerCards = [getNextCard(),getNextCard()];
 
@@ -75,6 +72,45 @@ newGameButton.addEventListener('click',function(){
     hitButton.style.marginRight = '20px';
     stayButton.style.display = 'inline-block';
 
+    showStatus();
+});
+
+function checkForEndOfGame(){
+    updateScores();
+    if(gameOver){
+        while(dealerScore < playerScore
+                && playerScore <= 21
+                && dealerScore <= 21){
+            dealerCards.push(getNextCard());
+            console.log(dealerCards);
+            updateScores();
+        }
+    }
+
+    if(playerScore > 21){
+        playerWon = false;
+        gameOver = true;
+    }else if(dealerScore > 21){
+        playerWon = true;
+        gameOver = true;
+    }else if(gameOver){
+        if(playerScore > dealerScore){
+            playerWon = true;
+        }else{
+            playerWon = false;
+        }
+    }
+}
+
+hitButton.addEventListener('click',function(){
+    playerCards.push(getNextCard());
+    checkForEndOfGame();
+    showStatus();
+});
+
+stayButton.addEventListener('click',function(){
+    gameOver = true;
+    checkForEndOfGame();
     showStatus();
 });
 
@@ -102,10 +138,9 @@ function getCardNumericValue(card){
             return 8;
         case 'Nine':
             return 9;
-        defalt:
+        default:
             return 10;
     }
-
 }
 
 function getScore(cardArray){
@@ -174,36 +209,6 @@ function showStatus(){
     }
 }
 
-
-/* 
-let result1 = Math.trunc(Math.random()*52);
-let result2 = Math.floor(Math.random()*52);
-console.log(result1,result2);
-
-let date = new Date().toDateString();
-console.log(date); 
-*/
-
-//console.log(deck);
-//playerCards = [ getNextCard(), getNextCard()];
-
-
-
-/* 
-let city = "TX";
-switch(city){
-    case "TX":
-        console.log("TX");
-        break;
-    case "TT":
-        console.log("TT");
-        break;
-    default:
-        console.log("default");
-        break;
-}
-*/
-//web page
 
 
 
