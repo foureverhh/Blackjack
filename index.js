@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable no-console */
 //Card variables
 let suits = ["Hearts", "Clubs", "Diamonds", "Spades"];
@@ -27,24 +28,6 @@ hitButton.style.display = 'none';
 stayButton.style.display = 'none';
 showStatus();
 
-newGameButton.addEventListener('click',function(){
-    gameStarted = true;
-    gameOver = false;
-    playerWon = false;
-
-    deck = createDeck();
-    dealerCards = [getNextCard(),getNextCard()];
-    playerCards = [getNextCard(),getNextCard()];
-
-    textArea.innerText ='Started ... ';
-    newGameButton.style.display = 'none';
-    hitButton.style.display = 'inline-block';
-    hitButton.style.marginRight = '20px';
-    stayButton.style.display = 'inline-block';
-
-    showStatus();
-});
-
 const createDeck = () => {
     let deck = [];
     for(let suitIndex = 0; suitIndex<suits.length;suitIndex++){
@@ -57,22 +40,57 @@ const createDeck = () => {
         }
     }
     return deck;
-}  
+} 
 
-function getCardString(card){
-    return card.value + ' of ' + card.suit;
+function shuffleDeck(deck){
+    for(let i = 0; i < deck.length; i++){
+        let randomIndex = Math.trunc(Math.random()*deck.length) ;
+        let temp = deck[randomIndex];
+        deck[randomIndex] = deck[i];
+        deck[i] = temp;
+    }
 }
+
+
 
 function getNextCard(){
     return deck.shift();
 }
 
+
+newGameButton.addEventListener('click',function(){
+    gameStarted = true;
+    gameOver = false;
+    playerWon = false;
+
+    deck = createDeck();
+    shuffleDeck(deck);
+    console.log(deck);
+    dealerCards = [getNextCard(),getNextCard()];
+    playerCards = [getNextCard(),getNextCard()];
+
+    textArea.innerText ='Started ... ';
+    newGameButton.style.display = 'none';
+    hitButton.style.display = 'inline-block';
+    hitButton.style.marginRight = '20px';
+    stayButton.style.display = 'inline-block';
+
+    showStatus();
+});
+
+function getCardString(card){
+    return card.value + ' of ' + card.suit;
+}
 function showStatus(){
     if(!gameStarted){
         textArea.innerText = 'Welcome to Blackjack!';
         return;
     }
+    for(let i = 0; i < deck.length; i++){
+        textArea.innerText += "\n" + getCardString(deck[i]);
+    }
 }
+
 
 /* 
 let result1 = Math.trunc(Math.random()*52);
@@ -84,13 +102,9 @@ console.log(date);
 */
 
 //console.log(deck);
+//playerCards = [ getNextCard(), getNextCard()];
 
-playerCards = [ getNextCard(), getNextCard()];
 
-console.log("Welcome to Blackjack!");
-console.log("You are dealt: ");
-console.log(" "+getCardString(playerCards[0]));
-console.log(" "+getCardString(playerCards[1]));
 
 /* 
 let city = "TX";
